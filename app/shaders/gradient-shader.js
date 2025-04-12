@@ -1,9 +1,11 @@
 // * Vertex shader
 export const vertex = /* glsl */ `
 
-   varying vec2 vUv;
    uniform float time;
+   uniform vec3 uColor[5];
+   varying vec2 vUv;
    varying vec3 vColor;
+
 
    	// Simplex 3D Noise 
    //	by Ian McEwan, Stefan Gustavson (https://github.com/stegu/webgl-noise)
@@ -87,13 +89,54 @@ export const vertex = /* glsl */ `
 
 
    void main() {
-      vColor = vec3(0.);
 
-      float nosie = snoise(vec3(uv,time*0.5));
+      // * Changing wave shape by tweeking uv length
+      vec2 noiseCoords = uv*vec2(3.,4.);
 
-      vec3 pos = vec3(position.x,position.y, position.z+nosie*2.);
+      // * Tilting oour plane to the back
+      float tilt = -0.8 * uv.y;
+      // * Incline our plane to the left
+      float incline = 0.5 * uv.x;
+      // * Rising upper right corner
+      float offset = incline* mix(-0.25,0.25,uv.y);
 
+      // * Using Simplex 3D noise in dependence of time for noise and for x coodinate (making it move on x axis)
+      float noise = snoise(vec3(noiseCoords.x +time*0.1 ,noiseCoords.y ,time*0.2));
+
+      // * cutting valuse of noise less then 0
+      noise = max(0., noise);
+      
+      // * Defining position with application of everything to our z coordinate 
+      vec3 pos = vec3(
+         position.x,
+         position.y,
+         position.z + noise*0.3 + tilt + incline + offset
+      );
+
+
+      vColor = uColor[4]; 
+      for (int i =0; i <4; i++){
+
+         float noiseFlow = .1 + float(i)*0.3;
+         float noiseSpeed = .1 + float(i)*0.3;
+         float noiseStart = 1. + float(i)*10.;
+         vec2 noiseFreq = vec2(0.3,0.4);
+
+         float noise = snoise(
+            vec3(
+               noiseCoords.x*noiseFreq.x + time*0.1 * noiseFlow,
+               noiseCoords.y*noiseFreq.y,
+               time* 0.4*noiseSpeed + noiseStart
+            )
+         );
+
+         vColor = mix(vColor, uColor[i],noise);
+      }
+
+
+      // * Mapping vUv for fragment shader
       vUv = uv;
+      // *  applying our position. ProjectionMatrix pulls everything into view (kind of), modelViewMatrix scales positon from local to world space
       gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
    }
 
@@ -112,7 +155,7 @@ export const fragment = /* glsl */`
    void main(){
       vec2 uv = vUv; 
 
-      gl_FragColor = vec4(uv,0., 1.0);
-      // gl_FragColor = vec4(vColor, 1.0);
+      // gl_FragColor = vec4(uv,0., 1.0);
+      gl_FragColor = vec4(vColor, 1.0);
    }
 `
