@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
+@theme {
+  --color-dusk: #e9decb;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --dusk: #e9decb;
 }
 
 @theme inline {
