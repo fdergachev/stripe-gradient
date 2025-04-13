@@ -2,6 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import { fragment, vertex } from '../shaders/gradient-shader';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useControls } from 'leva';
 
 var colors = require("nice-color-palettes");
 // * Peek one palette 
@@ -14,6 +15,12 @@ palette = palette.map((color: string) => new THREE.Color(color))
 const Model = () => {
    // const { size } = useThree();
    const shaderRef = useRef<THREE.ShaderMaterial>(null);
+   const color = useControls(
+      [...Array(5).keys()].reduce((acc: any, num) => {
+         acc["color" + num + 1] = "#" + palette[num].getHexString();
+         return acc;
+      }, {})
+   )
 
    const uniforms = useMemo(() => ({
       time: { value: 0.0 },

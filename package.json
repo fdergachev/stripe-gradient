@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-three/drei": "^10.0.6",
     "@react-three/fiber": "^9.1.2",
+    "leva": "^0.10.0",
     "next": "15.3.0",
     "nice-color-palettes": "^4.0.0",
     "react": "^19.0.0",
