@@ -126,10 +126,10 @@ export const vertex = /* glsl */ `
          float noiseCeil = 0.6 + float(i) * 0.07;
 
          float noise = smoothstep(
-            0.,
-            1.,
-            // noiseFloor,
-            // noiseCeil,
+            // 0.,
+            // 1.,
+            noiseFloor,
+            noiseCeil,
             snoise(
                vec3(
                   noiseCoords.x*noiseFreq.x + time* noiseFlow,
