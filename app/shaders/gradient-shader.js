@@ -101,7 +101,7 @@ export const vertex = /* glsl */ `
       float offset = incline* mix(-0.25,0.25,uv.y);
 
       // * Using Simplex 3D noise in dependence of time for noise and for x coodinate (making it move on x axis)
-      float noise = snoise(vec3(noiseCoords.x +time*0.1 ,noiseCoords.y ,time*0.2));
+      float noise = snoise(vec3(noiseCoords.x +time*3. ,noiseCoords.y ,time*10.));
 
       // * cutting valuse of noise less then 0
       noise = max(0., noise);
@@ -117,19 +117,29 @@ export const vertex = /* glsl */ `
       vColor = uColor[4]; 
       for (int i =0; i <4; i++){
 
-         float noiseFlow = .1 + float(i)*0.3;
-         float noiseSpeed = .1 + float(i)*0.3;
+         float noiseFlow = 5. + float(i)*0.3;
+         float noiseSpeed = 10. + float(i)*0.3;
          float noiseStart = 1. + float(i)*10.;
-         vec2 noiseFreq = vec2(0.3,0.4);
+         vec2 noiseFreq = vec2(1.,1.4)*0.4;
 
-         float noise = snoise(
-            vec3(
-               noiseCoords.x*noiseFreq.x + time*0.1 * noiseFlow,
-               noiseCoords.y*noiseFreq.y,
-               time* 0.4*noiseSpeed + noiseStart
+         float noiseFloor = 0.1;
+         float noiseCeil = 0.6 + float(i) * 0.07;
+
+         float noise = smoothstep(
+            0.,
+            1.,
+            // noiseFloor,
+            // noiseCeil,
+            snoise(
+               vec3(
+                  noiseCoords.x*noiseFreq.x + time* noiseFlow,
+                  noiseCoords.y*noiseFreq.y,
+                  time* noiseSpeed + noiseStart
+               )
             )
          );
 
+         // * Gives the color between base color vColor and one of the colors in palette based on x and y position in time via noise functio (simplex nois gives nise edges) 
          vColor = mix(vColor, uColor[i],noise);
       }
 

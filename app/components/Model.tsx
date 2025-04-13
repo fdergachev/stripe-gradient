@@ -13,7 +13,6 @@ palette = palette.map((color: string) => new THREE.Color(color))
 
 const Model = () => {
    // const { size } = useThree();
-
    const shaderRef = useRef<THREE.ShaderMaterial>(null);
 
    const uniforms = useMemo(() => ({
@@ -26,7 +25,7 @@ const Model = () => {
    //* Update time every frame
    useFrame(({ clock }) => {
       if (shaderRef.current) {
-         shaderRef.current.uniforms.time.value = clock.getElapsedTime();
+         shaderRef.current.uniforms.time.value = clock.getElapsedTime() * 0.02;
       }
    });
 
@@ -37,7 +36,7 @@ const Model = () => {
       <mesh>
          {/* args={[1, 1, 300, 300]} */}
          {/* args={[5, 5, 50, 50]} */}
-         <planeGeometry args={[1, 1, 300, 300]} />
+         <planeGeometry args={[1.5, 1.5, 300, 300]} />
          <shaderMaterial
             ref={shaderRef}
             uniforms={uniforms}
