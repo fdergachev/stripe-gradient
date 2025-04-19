@@ -1,3 +1,7 @@
+## Recreation of recreation by Yuri Artiukh of Stripe Gradient [link](https://www.youtube.com/watch?v=LW9d2cqIHb4)
+![image](https://github.com/user-attachments/assets/6e49eef5-3fe5-4df3-aa20-c2d5d29e2251)
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
